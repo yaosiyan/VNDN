@@ -248,7 +248,7 @@ def findTrip():
 																			cruise_start_angle) > 45 or deltaAngle(
 							angle_now, cruise_average_angle) > 30:
 						# 一段cruise结束了
-						if cruiseEndTime - cruiseStartTime > 10:  #排除10秒以下的cruise
+						if cruiseEndTime - cruiseStartTime > 0:  #排除10秒以下的cruise
 							str_w = str(tripNumber) + ',' + str(cruiseNumber) + ',' + str(
 								cruiseEndTime - cruiseStartTime) + ',' + str(cruise_average_angle) + ',' + str(cruise_start_angle) + ',' + str(cruiseStartTime) + ',' + str(cruiseEndTime) + '\n'
 							f_w.write(str_w)
@@ -279,7 +279,7 @@ def findTrip():
 					# 这也意味着一段cruise结束了。输出这段cruise的持续时间
 					cruiseEndTime = tripEndTime  # 一段cruise结束了
 					# 排除10秒以下的cruise
-					if cruiseEndTime - cruiseStartTime > 10:
+					if cruiseEndTime - cruiseStartTime > 0:
 						str_w = str(tripNumber) + ',' + str(cruiseNumber) + ',' + str(
 							cruiseEndTime - cruiseStartTime) + ',' + str(cruise_average_angle) + ',' + str(
 							cruise_start_angle) + ',' + str(cruiseStartTime) + ',' + str(cruiseEndTime) + '\n'
@@ -315,7 +315,7 @@ def findTrip():
 		# 这也意味着一段cruise结束了。输出这段cruise的持续时间
 		cruiseEndTime = tripEndTime  # 一段cruise结束了
 		# 排除10秒以下的cruise
-		if cruiseEndTime - cruiseStartTime > 10:
+		if cruiseEndTime - cruiseStartTime > 0:
 			str_w = str(tripNumber) + ',' + str(cruiseNumber) + ',' + str(
 				cruiseEndTime - cruiseStartTime) + ',' + str(cruise_average_angle) + ',' + str(
 				cruise_start_angle) + ',' + str(cruiseStartTime) + ',' + str(cruiseEndTime) + '\n'
@@ -660,8 +660,9 @@ def dirDistribution():
 		f_w.write(str_f)
 		c = c + 1
 	f_w.close()
+
 findLongTrip()
-# findDirection()
+#findDirection()
 #findTrip()
 #dirDistribution()
 # average()

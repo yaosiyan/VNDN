@@ -298,7 +298,7 @@ def findTrip():
 					#统计方向变化
 					angle_now = dir
 					#cruise终止条件
-					if deltaAngle(angle_now,angle_last) > 15 or deltaAngle(angle_now,cruise_start_angle) > 30 or deltaAngle(angle_now,cruise_average_angle) > 20:
+					if deltaAngle(angle_now,angle_last) > 15 or deltaAngle(angle_now,cruise_start_angle) > 45 or deltaAngle(angle_now,cruise_average_angle) > 30:
 						#一段cruise结束了
 						if cruiseEndTime - cruiseStartTime > 0:#除去单记录
 							str_w = str(tripNumber) + ',' + str(cruiseNumber) + ',' + str(
@@ -472,14 +472,16 @@ def showTrip():
 					#统计方向变化
 					angle_now = dir
 					#cruise终止条件
-					if deltaAngle(angle_now,angle_last) > 15 or deltaAngle(angle_now,cruise_start_angle) > 30 or deltaAngle(angle_now,cruise_average_angle) > 20:
+					if deltaAngle(angle_now,angle_last) > 15 or deltaAngle(angle_now,cruise_start_angle) > 45 or deltaAngle(angle_now,cruise_average_angle) > 30:
 						#一段cruise结束了
 						if cruiseEndTime - cruiseStartTime > 0:  # 正常结束
 							f_w.write('################################### cruise END \n')
+							#f_w.write('注：'+','+str(angle_last) + ',' + str(cruise_start_angle) + ',' + str(cruise_average_angle) + '\n')
 							f_w.write('################################# cruise START \n')
 							cruiseNumber += 1
 						else:
 							f_w.write('################################## cruise DROP \n')
+							#f_w.write('注：'+','+str(angle_last) + ',' + str(cruise_start_angle) + ',' + str(cruise_average_angle) + '\n')
 							f_w.write('################################# cruise START \n')
 						f_w.write(line_old)#终止条件是由line_old的内容引发，line_old不应该算到cruise里面来
 						#重新开始一段cruise
@@ -490,8 +492,11 @@ def showTrip():
 						cruiseStartTime = timeSec
 					else:
 						# 否则，更新cruise_average_angle
+						angle_last = angle_now
 						f_w.write(line_old)
-						cruise_average_angle = (cruise_average_angle * count_for_average + angle_now) / (count_for_average + 1)
+						angle_array = [cruise_average_angle] * count_for_average
+						angle_array.append(angle_now)
+						cruise_average_angle = angle_avg(angle_array, count_for_average + 1)
 						count_for_average += 1
 						cruiseEndTime = timeSec#实时更新的
 				else:#遇到了stop
@@ -502,6 +507,7 @@ def showTrip():
 						f_w.write('################################### cruise END \n')
 					else:
 						f_w.write('################################## cruise DROP \n')
+					#f_w.write('注：'+','+str(angle_last) + ',' + str(cruise_start_angle) + ',' + str(cruise_average_angle) + '\n')
 					#接下来考虑trip
 					#tripEndTime由前面不断更新得到，现在应该是最后一条运动记录的时刻
 					inTrip = False
@@ -516,6 +522,7 @@ def showTrip():
 						f_w.write(line_old)  # 这行stop写在标记后
 						tripNumber = tripNumber + 1#接下来重新开始一段trip
 						cruiseNumber = 1
+
 			else:
 				if count != -1:
 					dir = float(direction)
@@ -665,8 +672,8 @@ def dirDistribution():
 	f_w.close()
 
 #findDirection()
-#findTrip()
-dirDistribution()
+findTrip()
+#dirDistribution()
 #average()
 #cruise()
 
